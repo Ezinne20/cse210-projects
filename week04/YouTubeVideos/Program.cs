@@ -1,73 +1,98 @@
 using System;
+using System.Collections.Generic;
 
-public class VideoDetails
+class Comment
 {
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public string Duration { get; set; }
-    
-    public VideoDetails(string title, string description, string duration)
+    private string commenterName;
+    private string text;
+
+    public Comment(string commenterName, string text)
     {
-        Title = title;
-        Description = description;
-        Duration = duration;
+        this.commenterName = commenterName;
+        this.text = text;
+    }
+
+    public string GetCommentDetails()
+    {
+        return $"{commenterName}: \"{text}\"";
     }
 }
 
-public class Video
+class Video
 {
-    public VideoDetails Details { get; set; }
-    
-    public Video(string title, string description, string duration)
+    private string title;
+    private string author;
+    private int lengthInSeconds;
+    private List<Comment> comments;
+
+    public Video(string title, string author, int lengthInSeconds)
     {
-        Details = new VideoDetails(title, description, duration);
-    }
-    
-    // We expose the important functionality to the user
-    public void Play()
-    {
-        Console.WriteLine($"Now playing: {Details.Title}");
+        this.title = title;
+        this.author = author;
+        this.lengthInSeconds = lengthInSeconds;
+        this.comments = new List<Comment>();
     }
 
-    public void Pause()
+    public void AddComment(Comment comment)
     {
-        Console.WriteLine($"Paused: {Details.Title}");
+        comments.Add(comment);
+    }
+
+    public int GetCommentCount()
+    {
+        return comments.Count;
+    }
+
+    public void DisplayVideoDetails()
+    {
+        Console.WriteLine($"Title: {title}");
+        Console.WriteLine($"Author: {author}");
+        Console.WriteLine($"Length: {lengthInSeconds} seconds");
+        Console.WriteLine($"Number of Comments: {GetCommentCount()}");
+        Console.WriteLine("Comments:");
+
+        foreach (var comment in comments)
+        {
+            Console.WriteLine($"- {comment.GetCommentDetails()}");
+        }
+        Console.WriteLine();
     }
 }
 
-public class Player
+class Program
 {
-    private Video _video;
-    
-    public Player(Video video)
+    static void Main()
     {
-        _video = video;
-    }
-    
-    // User interacts with the player, not the internal video details
-    public void PlayVideo()
-    {
-        _video.Play();
-    }
+        // Creating videos
+        Video video1 = new Video("C# Basics Tutorial", "Programming with Jose",600);
+        Video video2 = new Video("Top 10 Coding Tips", "Tech Guru", 480);
+        Video video3 = new Video("How to Cook Pasta", "Chef Ana", 720);
+        Video video4 = new Video("Space Exploration Facts", "Science Daily", 900);
 
-    public void PauseVideo()
-    {
-        _video.Pause();
-    }
-}
+        // Adding comments to videos
+        video1.AddComment(new Comment("Alice", "Great explanation!"));
+        video1.AddComment(new Comment("Bob", "Very helpful, thanks!"));
+        video1.AddComment(new Comment("Charlie", "Looking forward to more videos!"));
 
-public class Program
-{
-    public static void Main(string[] args)
-    {
-        // Creating a video object
-        Video video = new Video("C# Abstraction Tutorial", "Learn the basics of abstraction in C#", "10:00");
-        
-        // Creating a player object
-        Player player = new Player(video);
+        video2.AddComment(new Comment("David", "Awesome tips!"));
+        video2.AddComment(new Comment("Eve", "I learned a lot, thank you."));
+        video2.AddComment(new Comment("Frank", "Well presented!"));
 
-        // Playing and pausing video through the player (hides internal details)
-        player.PlayVideo();
-        player.PauseVideo();
+        video3.AddComment(new Comment("Grace", "Tried this recipe, it was delicious!"));
+        video3.AddComment(new Comment("Hannah", "Best pasta tutorial ever."));
+        video3.AddComment(new Comment("Isaac", "What type of cheese would you recommend?"));
+
+        video4.AddComment(new Comment("Jack", "Space is so fascinating!"));
+        video4.AddComment(new Comment("Kelly", "I love these space facts."));
+        video4.AddComment(new Comment("Liam", "Can you make a video on black holes?"));
+
+        // Storing videos in a list
+        List<Video> videos = new List<Video> { video1, video2, video3, video4 };
+
+        // Displaying video details
+        foreach (var video in videos)
+        {
+            video.DisplayVideoDetails();
+        }
     }
 }
